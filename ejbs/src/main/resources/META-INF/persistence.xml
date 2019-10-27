@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xsi:schemaLocation="
+	http://xmlns.jcp.org/xml/ns/persistence
+	http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    <persistence-unit name="lotteryPU" transaction-type="JTA">
+        <!--
+        <jta-data-source>java:jboss/datasources/${ds.name}</jta-data-source>
+        -->
+        <jta-data-source>java:jboss/datasources/lotteryDS</jta-data-source>
+        <properties>
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="javax.persistence.schema-generation.create-source" value="script"/>
+            <property name="javax.persistence.schema-generation.create-script-source" value="META-INF/sql/schema-creation.sql"/>
+        </properties>
+
+    </persistence-unit>
+</persistence>
