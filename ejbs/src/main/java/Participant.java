@@ -2,6 +2,7 @@ import javax.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name="participants")
@@ -13,4 +14,7 @@ public class participant{
     private long id;
     private long msisdn;
     private Date first_seen;
+
+    @OneToMany
+    private Set<ticket> tickets;
 }
