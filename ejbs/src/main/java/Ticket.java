@@ -2,6 +2,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "tickets")
@@ -13,6 +14,14 @@ public class Ticket {
     private long id;
 
     private String numbers;
+
+    @Column(name = "date_played")
+    private Date datePlayed;
+
+    private boolean valid;
+
+    @Column(name = "ticket_id")
+    private long ticketId;
 
     @ManyToOne
     @JoinColumn(name="participant_id")

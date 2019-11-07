@@ -37,4 +37,23 @@ public class TicketActions {
             return Response.ok(lottoService.createFailedResponseForNumbersValidation(validationResult)).build();
         }
     }
+
+    @POST
+    @Path("editTicket")
+    public Response handleEditTicket(Ticket changedTicket) {
+        String numbers = changedTicket.getNumbers();
+        NumbersValidator numbersValidator = new NumbersValidator();
+        int validationResult = numbersValidator.checkNumbersString(numbers, 6);
+        if (validationResult == 0) {
+            long ticketId = changedTicket.getTicketId();
+            Ticket existingTicket = lottoService.findValidTicketById(ticketId);
+            existingTicket.setValid(false);
+            Ticket editedTicket = lottoService.createEditedTicket(existingTicket,numbers);
+            lottoService.saveTicket(editedTicket);
+            lottoService.updateTicket(existingTicket);
+        }
+
+        return Response.ok("OK").build();
+    }
+
 }

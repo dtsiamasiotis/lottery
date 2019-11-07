@@ -1,11 +1,15 @@
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.management.Query;
 import java.util.Date;
 
 @Stateless
 public class LottoService {
     @Inject
     private ParticipantDAO participantDAO;
+
+    @Inject
+    private TicketDAO ticketDAO;
 
     public Participant findOrCreateParticipant(String msisdn)
     {
@@ -28,7 +32,20 @@ public class LottoService {
     {
         Ticket t = new Ticket();
         t.setNumbers(newTicket.getNumbers());
+        t.setDatePlayed(new Date());
+        t.setValid(true);
+        t.setTicketId(ticketDAO.getNextTicketId());
+        return t;
+    }
 
+    public Ticket createEditedTicket(Ticket existingTicket, String numbers)
+    {
+        Ticket t = new Ticket();
+        t.setValid(true);
+        t.setNumbers(numbers);
+        t.setDatePlayed(new Date());
+        t.setTicketId(existingTicket.getTicketId());
+        t.setParticipant(existingTicket.getParticipant());
         return t;
     }
 
@@ -63,5 +80,21 @@ public class LottoService {
         }
 
         return response;
+    }
+
+    public Ticket findValidTicketById(long ticketId)
+    {
+        Ticket t = ticketDAO.findValidTicketById(ticketId);
+        return t;
+    }
+
+    public void saveTicket(Ticket ticket)
+    {
+        ticketDAO.saveTicket(ticket);
+    }
+
+    public void updateTicket(Ticket ticket)
+    {
+        ticketDAO.updateTicket(ticket);
     }
 }
