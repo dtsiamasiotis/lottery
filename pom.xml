@@ -12,8 +12,6 @@
   <name>lottery</name>
 
   <modules>
-    <module>projects</module>
-    <module>primary-source</module>
     <module>servlets</module>
     <module>ejbs</module>
     <module>ear</module>
@@ -33,26 +31,16 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>lottery</groupId>
-        <artifactId>logging</artifactId>
-        <version>1.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>lottery</groupId>
-        <artifactId>primary-source</artifactId>
-        <version>1.0-SNAPSHOT</version>
-      </dependency>
      <dependency>
         <groupId>lottery</groupId>
         <artifactId>servlet</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${project.version}</version>
         <type>war</type>
       </dependency>
       <dependency>
         <groupId>lottery</groupId>
         <artifactId>ejbs</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${project.version}</version>
         <type>ejb</type>
       </dependency>
     </dependencies>

@@ -17,14 +17,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>lottery</groupId>
-      <artifactId>primary-source</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>lottery</groupId>
-      <artifactId>logging</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.8</version>
