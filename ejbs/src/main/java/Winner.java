@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Table(name = "winners")
 @Getter
 @Setter
-public class winner {
+public class Winner {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -20,4 +20,8 @@ public class winner {
 
     @Column(name = "winning_numbers_count")
     private int winningNumbersCount;
+
+    @OneToOne
+    @JoinColumn(name = "ticket_id")
+    private Ticket ticket;
 }

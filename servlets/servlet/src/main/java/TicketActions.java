@@ -47,13 +47,17 @@ public class TicketActions {
         if (validationResult == 0) {
             long ticketId = changedTicket.getTicketId();
             Ticket existingTicket = lottoService.findValidTicketById(ticketId);
+            if(existingTicket==null)
+                return Response.ok("TICKET WAS NOT FOUND").build();
             existingTicket.setValid(false);
             Ticket editedTicket = lottoService.createEditedTicket(existingTicket,numbers);
             lottoService.saveTicket(editedTicket);
             lottoService.updateTicket(existingTicket);
+            return Response.ok("OK").build();
         }
-
-        return Response.ok("OK").build();
+        else{
+            return Response.ok(lottoService.createFailedResponseForNumbersValidation(validationResult)).build();
+        }
     }
 
 }

@@ -1,6 +1,6 @@
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.management.Query;
 import java.util.Date;
 
 @Stateless
@@ -10,6 +10,9 @@ public class LottoService {
 
     @Inject
     private TicketDAO ticketDAO;
+
+    @EJB
+    private DrawService drawService;
 
     public Participant findOrCreateParticipant(String msisdn)
     {
@@ -35,6 +38,7 @@ public class LottoService {
         t.setDatePlayed(new Date());
         t.setValid(true);
         t.setTicketId(ticketDAO.getNextTicketId());
+        t.setDrawId(drawService.getCurrentDrawId());
         return t;
     }
 

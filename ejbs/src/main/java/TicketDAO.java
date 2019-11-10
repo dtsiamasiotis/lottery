@@ -17,8 +17,11 @@ public class TicketDAO {
     {
         Query q = entityManager.createNativeQuery("SELECT * FROM tickets WHERE ticket_id=? AND valid = true",Ticket.class);
         q.setParameter(1,ticketId);
-        Ticket t = (Ticket)q.getSingleResult();
-        return t;
+        try {
+            Ticket t = (Ticket) q.getSingleResult();
+            return t;
+        }catch(javax.persistence.NoResultException nre){return null;}
+
     }
 
     public void saveTicket(Ticket ticket)

@@ -1,12 +1,13 @@
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-public class WinnerDAO {
+public class DrawDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void saveWinner(Winner winner)
+    public void saveDraw(Draw draw)
     {
-        entityManager.persist(winner);
+        entityManager.persist(draw);
     }
+    public void updateDraw(Draw draw){entityManager.merge(draw);}
 }

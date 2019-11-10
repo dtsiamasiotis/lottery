@@ -23,9 +23,14 @@ public class Ticket {
     @Column(name = "ticket_id")
     private long ticketId;
 
+    @Column(name = "draw_id")
+    private long drawId;
+
     @ManyToOne
     @JoinColumn(name="participant_id")
     private Participant participant;
-
+    
+    @Transient
+    private Winner winner;
 }
 

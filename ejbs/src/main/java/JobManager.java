@@ -1,6 +1,7 @@
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.*;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -16,28 +17,34 @@ public class JobManager {
     @Resource
     private TimerService timerService;
 
+    @EJB
+    private DrawService drawService;
+
     @PostConstruct
     public void init()
     {
-        List<Cron> drawTimes = loadDrawTimes();
-        for(Cron drawTime:drawTimes)
-            createDrawTimers(drawTime);
+        List<Cron> cronCommands = loadCronCommands();
+        for(Cron cronCommand:cronCommands)
+            createTimers(cronCommand);
+        System.out.println("init:"+this.toString());
     }
 
-    public List<Cron> loadDrawTimes()
+    public List<Cron> loadCronCommands()
     {
-        Query q = entityManager.createNativeQuery("SELECT * FROM cron WHERE command=?",Cron.class);
-        q.setParameter(1,"executeDraw");
+        Query q = entityManager.createNativeQuery("SELECT * FROM cron",Cron.class);
         List<Cron> results = q.getResultList();
         return results;
     }
 
-    public void createDrawTimers(Cron drawTime)
+    public void createTimers(Cron cronCommand)
     {
-        String expressionParts[] = drawTime.getExpression().split(" ");
+        String expressionParts[] = cronCommand.getExpression().split(" ");
         ScheduleExpression scheduleExpression = new ScheduleExpression();
         scheduleExpression.second(expressionParts[0]).minute(expressionParts[1]).hour(expressionParts[2]);
         TimerConfig timerConfig = new TimerConfig();
+        TimerType timerType = new TimerType();
+        timerType.setType(cronCommand.getCommand());
+        timerConfig.setInfo(timerType);
         timerConfig.setPersistent(false);
         timerService.createCalendarTimer(scheduleExpression,timerConfig);
     }
@@ -45,6 +52,14 @@ public class JobManager {
     @Timeout
     public void timerTimeout(Timer timer)
     {
-       
+        TimerType timerType = (TimerType)timer.getInfo();
+        if(timerType.getType().equals("performDraw"))
+            drawService.performDraw();
+        else if(timerType.getType().equals("createDraw"))
+            drawService.createDraw();
+        else if(timerType.getType().equals("findWinners"))
+            drawService.findWinners();
+
+        System.out.println(timerType.getType());
     }
 }
