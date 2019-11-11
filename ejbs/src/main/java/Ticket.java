@@ -29,7 +29,7 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name="participant_id")
     private Participant participant;
-    
+
     @Transient
     private Winner winner;
 }

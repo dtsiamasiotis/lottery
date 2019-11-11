@@ -1,5 +1,8 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.ejb.EJB;
 import javax.ejb.Local;
+import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -11,10 +14,26 @@ public class TicketActions {
   @EJB
   private LottoService lottoService;
 
+  @EJB
+  private RestRequestLogService restRequestLogService;
+
+  @Inject
+  private RestRequestsLog restRequestsLog;
+
     @POST
     @Path("createTicket")
-    public Response handleCreateTicket(Ticket newTicket)
+    public Response handleCreateTicket(String requestBody)
     {
+        //restRequestsLog.set
+        ObjectMapper objectMapper = new ObjectMapper();
+        Ticket newTicket = null;
+        restRequestsLog.setIncomingRequest(requestBody);
+        restRequestLogService.saveRestRequestLog(restRequestsLog);
+
+        try {
+            newTicket = objectMapper.readValue(requestBody, Ticket.class);
+        }catch(Exception e){return Response.serverError().build();}
+
         String numbers = newTicket.getNumbers();
         NumbersValidator numbersValidator = new NumbersValidator();
         int validationResult = numbersValidator.checkNumbersString(numbers,6);

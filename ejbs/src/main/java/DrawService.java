@@ -170,6 +170,7 @@ public class DrawService {
             newWinner.setDrawId(currentDraw.getId());
             newWinner.setTicket(t);
             newWinner.setWinningNumbersCount(foundNumbers);
+            newWinner.setWinningNumbers(buildWinningNumbersString(matchedNumbers));
             t.setWinner(newWinner);
 
         }
@@ -179,6 +180,19 @@ public class DrawService {
     public void saveWinnerToDatabase(Ticket t)
     {
         winnerDAO.saveWinner(t.getWinner());
+    }
+
+    public String buildWinningNumbersString(ArrayList<Short> matchedNumbers)
+    {
+        String winningNumbersStr = "";
+        for(int i=0;i<matchedNumbers.size();i++)
+        {
+            winningNumbersStr += String.valueOf(matchedNumbers.get(i));
+            if(i<matchedNumbers.size()-1)
+                winningNumbersStr +=",";
+        }
+
+        return winningNumbersStr;
     }
 }
 
