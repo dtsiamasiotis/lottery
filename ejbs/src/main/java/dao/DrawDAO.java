@@ -1,3 +1,7 @@
+package dao;
+
+import entities.Draw;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 

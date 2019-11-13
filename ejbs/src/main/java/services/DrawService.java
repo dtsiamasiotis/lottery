@@ -1,4 +1,13 @@
+package services;
+
+import dao.DrawDAO;
+import dao.WinnerDAO;
+import entities.Draw;
+import entities.Ticket;
+import entities.Winner;
+
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
 import javax.persistence.Entity;
@@ -22,6 +31,9 @@ public class DrawService {
 
     @Inject
     private WinnerDAO winnerDAO;
+
+    @EJB
+    private PrizeService prizeService;
 
     @PostConstruct
     public void init()
@@ -160,17 +172,14 @@ public class DrawService {
             i = -1;
         }
 
-       // HashMap<String, Object> results = new HashMap<String, Object>();
-        //results.put("numOfNumbersMatching", foundNumbers);
-        //results.put("numbersMatched", matchedNumbers);
 
-        //return results;
         if(foundNumbers>=3) {
             Winner newWinner = new Winner();
             newWinner.setDrawId(currentDraw.getId());
             newWinner.setTicket(t);
             newWinner.setWinningNumbersCount(foundNumbers);
             newWinner.setWinningNumbers(buildWinningNumbersString(matchedNumbers));
+            newWinner.setPrize(prizeService.findPrizeByNumbersCount(foundNumbers));
             t.setWinner(newWinner);
 
         }

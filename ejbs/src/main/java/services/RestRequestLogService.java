@@ -1,3 +1,8 @@
+package services;
+
+import dao.RestRequestsLogDAO;
+import entities.RestRequestsLog;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 

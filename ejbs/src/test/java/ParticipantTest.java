@@ -1,3 +1,6 @@
+import dao.ParticipantDAO;
+import entities.Participant;
+import entities.Ticket;
 import org.junit.jupiter.api.Test;
 
 public class ParticipantTest {

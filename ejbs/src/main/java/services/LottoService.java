@@ -1,3 +1,11 @@
+package services;
+
+import dao.ParticipantDAO;
+import dao.TicketDAO;
+import entities.Participant;
+import entities.Ticket;
+import services.DrawService;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;

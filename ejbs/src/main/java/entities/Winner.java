@@ -1,3 +1,5 @@
+package entities;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,4 +26,8 @@ public class Winner {
     @OneToOne
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
+
+    @OneToOne
+    @JoinColumn(name = "prize_id")
+    private Prize prize;
 }

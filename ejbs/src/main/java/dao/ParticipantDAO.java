@@ -1,4 +1,7 @@
+package dao;
+
 import com.sun.org.apache.xpath.internal.res.XPATHErrorResources_it;
+import entities.Participant;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

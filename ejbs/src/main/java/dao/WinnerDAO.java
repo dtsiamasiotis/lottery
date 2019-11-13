@@ -1,5 +1,10 @@
+package dao;
+
+import entities.Winner;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 
 public class WinnerDAO {
     @PersistenceContext

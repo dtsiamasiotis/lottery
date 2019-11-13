@@ -1,3 +1,7 @@
+package dao;
+
+import entities.Ticket;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;

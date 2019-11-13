@@ -1,4 +1,10 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
+import entities.Participant;
+import entities.RestRequestsLog;
+import entities.Ticket;
+import services.LottoService;
+import services.RestRequestLogService;
+import utils.NumbersValidator;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;

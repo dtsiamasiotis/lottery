@@ -1,3 +1,6 @@
+package entities;
+
+import entities.Participant;
 import lombok.Getter;
 import lombok.Setter;
 

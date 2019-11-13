@@ -1,3 +1,7 @@
+package dao;
+
+import entities.RestRequestsLog;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
