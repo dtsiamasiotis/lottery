@@ -1,8 +1,10 @@
 package services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.DrawDAO;
 import dao.WinnerDAO;
 import entities.Draw;
+import entities.OutgoingRequestsLog;
 import entities.Ticket;
 import entities.Winner;
 import org.jboss.resteasy.client.ClientRequest;
@@ -41,6 +43,9 @@ public class DrawService {
 
     @EJB
     private PrizeService prizeService;
+
+    @EJB
+    private OutgoingRequestLogService outgoingRequestLogService;
 
     @PostConstruct
     public void init()
@@ -225,8 +230,21 @@ public class DrawService {
             String msisdn = String.valueOf(winner.getTicket().getParticipant().getMsisdn());
             String requestBody = "{\"msisdn\":"+msisdn+",\"amount\":\""+amount+"\"}";
             WinnerRestModel winnerRestModel = createWinnerRestModel(winner);
+            OutgoingRequestsLog outgoingRequestsLog = new OutgoingRequestsLog();
+            ObjectMapper objectMapper = new ObjectMapper();
+            outgoingRequestsLog.setOutgoingRequestTstamp(new Date());
             Response response = target.request().post(Entity.entity(winnerRestModel, MediaType.APPLICATION_JSON));
+            String responseBody = response.readEntity(String.class);
             response.close();
+
+            try {
+                String jsonRequest = objectMapper.writeValueAsString(winnerRestModel);
+                outgoingRequestsLog.setOutgoingRequest(jsonRequest);
+            }catch(Exception e){}
+
+            outgoingRequestsLog.setResponse(responseBody);
+            outgoingRequestsLog.setResponseTstamp(new Date());
+            outgoingRequestLogService.saveOutgoingRequestLog(outgoingRequestsLog);
         }
     }
 

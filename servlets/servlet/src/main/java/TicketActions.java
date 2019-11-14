@@ -31,7 +31,6 @@ public class TicketActions {
     @Path("createTicket")
     public Response handleCreateTicket(String requestBody)
     {
-        //restRequestsLog.set
         ObjectMapper objectMapper = new ObjectMapper();
         Ticket newTicket = null;
         incomingRequestsLog.setIncomingRequest(requestBody);
