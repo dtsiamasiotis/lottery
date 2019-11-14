@@ -63,6 +63,8 @@ public class JobManager {
             drawService.createDraw();
         else if(timerType.getType().equals("findWinners"))
             drawService.findWinners();
+        else if(timerType.getType().equals("informWinners"))
+            drawService.informWinners();
 
         System.out.println(timerType.getType());
     }

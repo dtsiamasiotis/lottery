@@ -7,15 +7,16 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "restRequestsLog")
+@Table(name = "outgoingrequestslog")
 @Getter
 @Setter
-public class RestRequestsLog {
+public class OutgoingRequestsLog {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private String incomingRequest;
+
+    private String outgoingRequest;
     private String response;
-    private Date incomingRequestTstamp;
+    private Date outgoingRequestTstamp;
     private Date responseTstamp;
 }

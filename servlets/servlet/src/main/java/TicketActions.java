@@ -1,9 +1,9 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Participant;
-import entities.RestRequestsLog;
+import entities.IncomingRequestsLog;
 import entities.Ticket;
 import services.LottoService;
-import services.RestRequestLogService;
+import services.IncomingRequestLogService;
 import utils.NumbersValidator;
 
 import javax.ejb.EJB;
@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
+import java.util.Date;
 
 @Local
 @Path("/ticketActions")
@@ -21,10 +22,10 @@ public class TicketActions {
   private LottoService lottoService;
 
   @EJB
-  private RestRequestLogService restRequestLogService;
+  private IncomingRequestLogService incomingRequestLogService;
 
   @Inject
-  private RestRequestsLog restRequestsLog;
+  private IncomingRequestsLog incomingRequestsLog;
 
     @POST
     @Path("createTicket")
@@ -33,16 +34,18 @@ public class TicketActions {
         //restRequestsLog.set
         ObjectMapper objectMapper = new ObjectMapper();
         Ticket newTicket = null;
-        restRequestsLog.setIncomingRequest(requestBody);
-        restRequestLogService.saveRestRequestLog(restRequestsLog);
+        incomingRequestsLog.setIncomingRequest(requestBody);
+        incomingRequestsLog.setIncomingRequestTstamp(new Date());
 
         try {
             newTicket = objectMapper.readValue(requestBody, Ticket.class);
         }catch(Exception e){return Response.serverError().build();}
 
         String numbers = newTicket.getNumbers();
+
         NumbersValidator numbersValidator = new NumbersValidator();
         int validationResult = numbersValidator.checkNumbersString(numbers,6);
+
         if(validationResult == 0) {
             Participant participant = lottoService.findOrCreateParticipant(String.valueOf(newTicket.getParticipant().getMsisdn()));
             boolean participantExists = true;
@@ -52,14 +55,21 @@ public class TicketActions {
             }
 
             Ticket ticket = lottoService.createNewTicket(newTicket);
+
             participant = lottoService.addTicketToParticipant(participant, ticket);
-
-
             lottoService.saveOrUpdateParticipant(participant,participantExists);
+
+            incomingRequestsLog.setResponse("OK");
+            incomingRequestsLog.setResponseTstamp(new Date());
+            incomingRequestLogService.saveIncomingRequestLog(incomingRequestsLog);
+
             return Response.ok("OK").build();
         }
         else{
-            return Response.ok(lottoService.createFailedResponseForNumbersValidation(validationResult)).build();
+            String response = lottoService.createFailedResponseForNumbersValidation(validationResult);
+            incomingRequestsLog.setResponse(response);
+            incomingRequestsLog.setResponseTstamp(new Date());
+            return Response.ok(response).build();
         }
     }
 

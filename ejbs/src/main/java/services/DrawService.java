@@ -5,15 +5,22 @@ import dao.WinnerDAO;
 import entities.Draw;
 import entities.Ticket;
 import entities.Winner;
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
+import utils.WinnerRestModel;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.*;
 
 @Singleton
@@ -202,6 +209,36 @@ public class DrawService {
         }
 
         return winningNumbersStr;
+    }
+
+    public void informWinners()
+    {
+        Query q = entityManager.createNativeQuery("SELECT * FROM winners WHERE draw_id=?",Winner.class);
+        q.setParameter(1,getCurrentDrawId());
+        List<Winner> winners = q.getResultList();
+
+        for(Winner winner:winners)
+        {
+            ResteasyClient client = new ResteasyClientBuilder().build();
+            ResteasyWebTarget target = client.target("http://localhost:4000/informWinners");
+            String amount = String.valueOf(winner.getPrize().getAmount());
+            String msisdn = String.valueOf(winner.getTicket().getParticipant().getMsisdn());
+            String requestBody = "{\"msisdn\":"+msisdn+",\"amount\":\""+amount+"\"}";
+            WinnerRestModel winnerRestModel = createWinnerRestModel(winner);
+            Response response = target.request().post(Entity.entity(winnerRestModel, MediaType.APPLICATION_JSON));
+            response.close();
+        }
+    }
+
+    public WinnerRestModel createWinnerRestModel(Winner winner)
+    {
+        WinnerRestModel winnerRestModel = new WinnerRestModel();
+        winnerRestModel.setDrawId(winner.getDrawId());
+        winnerRestModel.setMsisdn(winner.getTicket().getParticipant().getMsisdn());
+        winnerRestModel.setPrizeAmount(winner.getPrize().getAmount());
+        winnerRestModel.setTicketId(winner.getTicket().getTicketId());
+        winnerRestModel.setWinningNumbers(winner.getWinningNumbers());
+        return winnerRestModel;
     }
 }
 
