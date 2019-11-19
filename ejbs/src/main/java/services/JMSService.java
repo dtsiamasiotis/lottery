@@ -3,16 +3,18 @@ package services;
 import utils.QueueType;
 
 import javax.annotation.Resource;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.io.Serializable;
 import javax.jms.Destination;
 import javax.jms.JMSContext;
 
+@Stateless
 public class JMSService {
     @Inject
     private JMSContext jmsctx;
 
-    @Resource(name="jms/chargesQueue")
+    @Resource(name="java:/queue/CHARGES_QUEUE")
     private Destination chargesQueue;
 
     public void send(Serializable s, QueueType queueType)

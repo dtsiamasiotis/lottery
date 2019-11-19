@@ -14,7 +14,7 @@ import javax.jms.MessageListener;
         name = "FailedPackagePurchaseMDB",
         activationConfig = {
                 @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-                @ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/chargesQueue"),
+                @ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/CHARGES_QUEUE"),
         }
 )
 public class ChargeMDB implements MessageListener {
@@ -32,6 +32,7 @@ public class ChargeMDB implements MessageListener {
             charge.setAmount(chargeEvent.getAmount());
             charge.setMsisdn(chargeEvent.getMsisdn());
             //charge.setTicket(chargeEvent.getTicketId());
+            System.out.println("charge event received");
         }catch(Exception e){}
     }
 }
