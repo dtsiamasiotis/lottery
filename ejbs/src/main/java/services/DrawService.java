@@ -225,7 +225,7 @@ public class DrawService {
         for(Winner winner:winners)
         {
             ResteasyClient client = new ResteasyClientBuilder().build();
-            ResteasyWebTarget target = client.target("http://localhost:4000/informWinners");
+            ResteasyWebTarget target = client.target("https://abf0bbaa-0ab4-403c-b2eb-628c78def46d.mock.pstmn.io/informWinners/");
             String amount = String.valueOf(winner.getPrize().getAmount());
             String msisdn = String.valueOf(winner.getTicket().getParticipant().getMsisdn());
             String requestBody = "{\"msisdn\":"+msisdn+",\"amount\":\""+amount+"\"}";
