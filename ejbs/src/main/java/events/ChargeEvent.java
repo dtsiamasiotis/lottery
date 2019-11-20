@@ -1,6 +1,5 @@
 package events;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,5 +10,5 @@ import java.io.Serializable;
 public class ChargeEvent implements Serializable {
     private String msisdn;
     private String amount;
-    private String ticketId;
+    private long ticketId;
 }

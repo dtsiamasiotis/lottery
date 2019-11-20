@@ -12,6 +12,8 @@ import javax.persistence.*;
 public class Charge {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
     private String msisdn;
     private String amount;
 

@@ -1,6 +1,7 @@
 package mdbs;
 
 import dao.ChargeDAO;
+import dao.TicketDAO;
 import entities.Charge;
 import events.ChargeEvent;
 
@@ -23,16 +24,19 @@ public class ChargeMDB implements MessageListener {
     private ChargeDAO chargeDAO;
 
     @Inject
-    private Charge charge;
+    private TicketDAO ticketDAO;
 
     @Override
     public void onMessage(Message message) {
         try {
             ChargeEvent chargeEvent = (ChargeEvent) message.getBody(ChargeEvent.class);
+            Charge charge = new Charge();
             charge.setAmount(chargeEvent.getAmount());
             charge.setMsisdn(chargeEvent.getMsisdn());
-            //charge.setTicket(chargeEvent.getTicketId());
+            charge.setTicket(ticketDAO.findTicketById(chargeEvent.getTicketId()));
+            chargeDAO.saveCharge(charge);
             System.out.println("charge event received");
-        }catch(Exception e){}
+        }catch(Exception e){e.printStackTrace();
+        }
     }
 }

@@ -28,6 +28,16 @@ public class TicketDAO {
 
     }
 
+    public Ticket findTicketById(long ticketId)
+    {
+        Query q = entityManager.createNativeQuery("SELECT * FROM tickets WHERE ticket_id=?",Ticket.class);
+        q.setParameter(1,ticketId);
+        try {
+            Ticket t = (Ticket) q.getSingleResult();
+            return t;
+        }catch(javax.persistence.NoResultException nre){return null;}
+    }
+
     public void saveTicket(Ticket ticket)
     {
         entityManager.persist(ticket);
