@@ -41,6 +41,9 @@ public class ChargeActions {
         }catch(Exception e){return Response.serverError().build();}
 
         jmsService.send(newChargeEvent, QueueType.CHARGE);
+        incomingRequestsLog.setResponse("OK");
+        incomingRequestsLog.setResponseTstamp(new Date());
+        incomingRequestLogService.saveIncomingRequestLog(incomingRequestsLog);
         return Response.ok("OK").build();
     }
 }
