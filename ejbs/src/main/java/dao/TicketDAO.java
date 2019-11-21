@@ -30,7 +30,7 @@ public class TicketDAO {
 
     public Ticket findTicketById(long ticketId)
     {
-        Query q = entityManager.createNativeQuery("SELECT * FROM tickets WHERE ticket_id=?",Ticket.class);
+        Query q = entityManager.createNativeQuery("SELECT * FROM tickets WHERE ticket_id=? ORDER BY date_played DESC LIMIT 1",Ticket.class);
         q.setParameter(1,ticketId);
         try {
             Ticket t = (Ticket) q.getSingleResult();
