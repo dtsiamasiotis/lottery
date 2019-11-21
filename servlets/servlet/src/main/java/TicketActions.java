@@ -68,13 +68,23 @@ public class TicketActions {
             String response = lottoService.createFailedResponseForNumbersValidation(validationResult);
             incomingRequestsLog.setResponse(response);
             incomingRequestsLog.setResponseTstamp(new Date());
+            incomingRequestLogService.saveIncomingRequestLog(incomingRequestsLog);
             return Response.ok(response).build();
         }
     }
 
     @POST
     @Path("editTicket")
-    public Response handleEditTicket(Ticket changedTicket) {
+    public Response handleEditTicket(String requestBody) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Ticket changedTicket = null;
+        incomingRequestsLog.setIncomingRequest(requestBody);
+        incomingRequestsLog.setIncomingRequestTstamp(new Date());
+
+        try {
+            changedTicket = objectMapper.readValue(requestBody, Ticket.class);
+        }catch(Exception e){return Response.serverError().build();}
+
         String numbers = changedTicket.getNumbers();
         NumbersValidator numbersValidator = new NumbersValidator();
         int validationResult = numbersValidator.checkNumbersString(numbers, 6);
@@ -87,10 +97,17 @@ public class TicketActions {
             Ticket editedTicket = lottoService.createEditedTicket(existingTicket,numbers);
             lottoService.saveTicket(editedTicket);
             lottoService.updateTicket(existingTicket);
+            incomingRequestsLog.setResponse("OK");
+            incomingRequestsLog.setResponseTstamp(new Date());
+            incomingRequestLogService.saveIncomingRequestLog(incomingRequestsLog);
             return Response.ok("OK").build();
         }
         else{
-            return Response.ok(lottoService.createFailedResponseForNumbersValidation(validationResult)).build();
+            String response = lottoService.createFailedResponseForNumbersValidation(validationResult);
+            incomingRequestsLog.setResponse(response);
+            incomingRequestsLog.setResponseTstamp(new Date());
+            incomingRequestLogService.saveIncomingRequestLog(incomingRequestsLog);
+            return Response.ok(response).build();
         }
     }
 
