@@ -35,6 +35,7 @@ public class TicketActions {
         Ticket newTicket = null;
         incomingRequestsLog.setIncomingRequest(requestBody);
         incomingRequestsLog.setIncomingRequestTstamp(new Date());
+        incomingRequestsLog.setRequestType("create ticket");
 
         try {
             newTicket = objectMapper.readValue(requestBody, Ticket.class);
@@ -80,6 +81,7 @@ public class TicketActions {
         Ticket changedTicket = null;
         incomingRequestsLog.setIncomingRequest(requestBody);
         incomingRequestsLog.setIncomingRequestTstamp(new Date());
+        incomingRequestsLog.setRequestType("edit ticket");
 
         try {
             changedTicket = objectMapper.readValue(requestBody, Ticket.class);

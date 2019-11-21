@@ -43,6 +43,7 @@ public class ChargeActions {
         jmsService.send(newChargeEvent, QueueType.CHARGE);
         incomingRequestsLog.setResponse("OK");
         incomingRequestsLog.setResponseTstamp(new Date());
+        incomingRequestsLog.setRequestType("charge notification");
         incomingRequestLogService.saveIncomingRequestLog(incomingRequestsLog);
         return Response.ok("OK").build();
     }

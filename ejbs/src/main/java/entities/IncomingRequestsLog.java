@@ -14,6 +14,7 @@ public class IncomingRequestsLog {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    private String requestType;
     private String incomingRequest;
     private String response;
     private Date incomingRequestTstamp;
