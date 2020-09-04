@@ -5,6 +5,7 @@ import entities.Ticket;
 import services.LottoService;
 import services.IncomingRequestLogService;
 import utils.NumbersValidator;
+import utils.NumbersValidatorResult;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -27,11 +28,47 @@ public class TicketActions {
   @Inject
   private IncomingRequestsLog incomingRequestsLog;
 
+  @Inject
+  private NumbersValidator numbersValidator;
+
     @POST
     @Path("createTicket")
-    public Response handleCreateTicket(String requestBody)
+    public Response handleCreateTicket(Ticket ticket)
     {
         ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody;
+        try {
+            requestBody = objectMapper.writeValueAsString(ticket);
+        } catch(Exception e) {return Response.serverError().build();}
+
+        incomingRequestsLog.setIncomingRequest(requestBody);
+        incomingRequestsLog.setIncomingRequestTstamp(new Date());
+        incomingRequestsLog.setRequestType("create ticket");
+
+        String numbers = ticket.getNumbers();
+        NumbersValidatorResult numbersValidatorResult = numbersValidator.checkNumbersString(numbers,6);
+
+        if(NumbersValidatorResult.VALID_SELECTION.equals(numbersValidatorResult)) {
+            Participant participant = lottoService.findOrCreateParticipant(String.valueOf(ticket.getParticipant().getMsisdn()));
+            boolean participantExists = true;
+            if (participant == null) {
+                participantExists = false;
+                participant = lottoService.createNewParticipant(ticket.getParticipant().getMsisdn());
+            }
+
+            lottoService.initTicket(ticket);
+
+            participant = lottoService.addTicketToParticipant(participant, ticket);
+            lottoService.saveOrUpdateParticipant(participant,participantExists);
+
+            incomingRequestsLog.setResponse("OK");
+            incomingRequestsLog.setResponseTstamp(new Date());
+            incomingRequestLogService.saveIncomingRequestLog(incomingRequestsLog);
+
+            return Response.ok("OK").build();
+        }
+
+        /*ObjectMapper objectMapper = new ObjectMapper();
         Ticket newTicket = null;
         incomingRequestsLog.setIncomingRequest(requestBody);
         incomingRequestsLog.setIncomingRequestTstamp(new Date());
@@ -64,9 +101,9 @@ public class TicketActions {
             incomingRequestLogService.saveIncomingRequestLog(incomingRequestsLog);
 
             return Response.ok("OK").build();
-        }
+        }*/
         else{
-            String response = lottoService.createFailedResponseForNumbersValidation(validationResult);
+            String response = lottoService.createFailedResponseForNumbersValidation(numbersValidatorResult);
             incomingRequestsLog.setResponse(response);
             incomingRequestsLog.setResponseTstamp(new Date());
             incomingRequestLogService.saveIncomingRequestLog(incomingRequestsLog);
@@ -74,7 +111,7 @@ public class TicketActions {
         }
     }
 
-    @POST
+   /* @POST
     @Path("editTicket")
     public Response handleEditTicket(String requestBody) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -111,6 +148,6 @@ public class TicketActions {
             incomingRequestLogService.saveIncomingRequestLog(incomingRequestsLog);
             return Response.ok(response).build();
         }
-    }
+    }*/
 
 }

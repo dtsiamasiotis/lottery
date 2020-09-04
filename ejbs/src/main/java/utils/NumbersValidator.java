@@ -1,9 +1,11 @@
 package utils;
 
+import javax.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Stateless
 public class NumbersValidator {
 
     private String correctPattern = "([-]?[0-9]{1}[0-9]*,)*?[-]?[0-9]{1}[0-9]*";
@@ -26,7 +28,7 @@ public class NumbersValidator {
     }
 
 
-    public int checkNumbersString(String numbersStr,int numbersPopulation)
+    public NumbersValidatorResult checkNumbersString(String numbersStr,int numbersPopulation)
     {
         String correctPattern = getcorrectPattern();
 
@@ -37,14 +39,14 @@ public class NumbersValidator {
             List<Integer> numbersInt = new ArrayList<Integer>();
 
             if(numbersSplit.length != numbersPopulation)
-                return INVALID_NUMBER_OF_SELECTIONS;
+                return NumbersValidatorResult.INVALID_NUMBER_OF_SELECTIONS;
 
             for(int i=0;i<numbersSplit.length;i++)
             {
                 int tempNumber = Integer.parseInt(numbersSplit[i]);
                 numbersInt.add(tempNumber);
                 if(tempNumber>MAX_SELECTED_NUMBER||tempNumber<MIN_SELECTED_NUMBER)
-                    return INVALID_RANGE_OF_SELECTIONS;
+                    return NumbersValidatorResult.INVALID_RANGE_OF_SELECTIONS;
             }
 
             Collections.sort(numbersInt);
@@ -53,19 +55,19 @@ public class NumbersValidator {
             {
                 if(numbersInt.get(i)==numbersInt.get(i+1))
                 {
-                    return DUPLICATE_SELECTION;
+                    return NumbersValidatorResult.DUPLICATE_SELECTION;
                 }
             }
 
-            return VALID_SELECTION;
+            return NumbersValidatorResult.VALID_SELECTION;
         }
         else if(numbersStr.matches(patternWithCharacters))
         {
-            return ALPHANUMERIC_SELECTION;
+            return NumbersValidatorResult.ALPHANUMERIC_SELECTION;
         }
         else
         {
-            return INVALID_GENERIC_SELECTION;
+            return NumbersValidatorResult.INVALID_GENERIC_SELECTION;
         }
     }
 }

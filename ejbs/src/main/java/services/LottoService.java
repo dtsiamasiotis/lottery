@@ -5,6 +5,7 @@ import dao.TicketDAO;
 import entities.Participant;
 import entities.Ticket;
 import services.DrawService;
+import utils.NumbersValidatorResult;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -75,22 +76,9 @@ public class LottoService {
         return participant;
     }
 
-    public String createFailedResponseForNumbersValidation(int validationResult)
+    public String createFailedResponseForNumbersValidation(NumbersValidatorResult numbersValidatorResult)
     {
-        String response="";
-        switch(validationResult) {
-            case 1:
-                response = "INVALID_NUMBER_OF_SELECTIONS";
-            case 2:
-                response = "INVALID_RANGE_OF_SELECTIONS";
-            case 3:
-                response = "DUPLICATE_SELECTION";
-            case 4:
-                response = "ALPHANUMERIC_SELECTION";
-            case 5:
-                response = "INVALID_GENERIC_SELECTION";
-        }
-
+        String response = numbersValidatorResult.name();
         return response;
     }
 
@@ -108,5 +96,12 @@ public class LottoService {
     public void updateTicket(Ticket ticket)
     {
         ticketDAO.updateTicket(ticket);
+    }
+
+    public void initTicket(Ticket ticket) {
+        ticket.setDatePlayed(new Date());
+        ticket.setValid(true);
+        ticket.setTicketId(ticketDAO.getNextTicketId());
+        ticket.setDrawId(drawService.getCurrentDrawId());
     }
 }
