@@ -51,6 +51,7 @@ public class LottoService {
         return t;
     }
 
+
     public Ticket createEditedTicket(Ticket existingTicket, String numbers)
     {
         Ticket t = new Ticket();
@@ -104,4 +105,5 @@ public class LottoService {
         ticket.setTicketId(ticketDAO.getNextTicketId());
         ticket.setDrawId(drawService.getCurrentDrawId());
     }
+
 }
