@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS tickets(
     date_played TIMESTAMPTZ,
     ticket_id BIGINT,
     valid BOOLEAN,
+    charged BOOLEAN,
     PRIMARY KEY (id),
     FOREIGN KEY (participant_id) REFERENCES participants(id)
 );

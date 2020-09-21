@@ -35,6 +35,8 @@ public class Ticket {
     @JoinColumn(name="participant_id")
     private Participant participant;
 
+    private boolean charged;
+
     @Transient
     private Winner winner;
 }

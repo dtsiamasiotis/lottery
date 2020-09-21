@@ -115,7 +115,7 @@ public class DrawService {
 
     public List<Ticket> fetchTicketsToCheck()
     {
-        Query q = entityManager.createNativeQuery("SELECT * FROM tickets WHERE draw_id=?",Ticket.class);
+        Query q = entityManager.createNativeQuery("SELECT * FROM tickets WHERE draw_id=? AND valid=TRUE",Ticket.class);
         q.setParameter(1, currentDraw.getId());
         List<Ticket> ticketsPlayed = q.getResultList();
         return ticketsPlayed;

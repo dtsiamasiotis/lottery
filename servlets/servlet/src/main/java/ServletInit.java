@@ -7,6 +7,7 @@ public class ServletInit extends Application {
         Set<Class<?>> classes = new HashSet<Class<?>>();
         classes.add(TicketActions.class);
         classes.add(ChargeActions.class);
+        classes.add(ValidationExceptionProvider.class);
         return classes;
     }
 

@@ -3,6 +3,7 @@ import javax.validation.constraints.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateTicketRequest {
+    @NotNull(message = "numbers cannot be null")
     private String numbers;
     @NotNull
     private String msisdn;
