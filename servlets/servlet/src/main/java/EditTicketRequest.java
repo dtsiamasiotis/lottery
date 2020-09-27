@@ -1,9 +1,12 @@
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.validation.constraints.NotNull;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EditTicketRequest {
-    @NotNull
+    @NotNull(message = "Ticket id cannot be null")
     private String ticketId;
-    @NotNull
+    @NotNull(message = "Numbers cannot be null")
     private String numbers;
 
     public String getTicketId() {

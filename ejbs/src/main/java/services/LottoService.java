@@ -23,7 +23,7 @@ public class LottoService {
     @EJB
     private DrawService drawService;
 
-    public Participant findOrCreateParticipant(String msisdn)
+    public Participant findParticipant(String msisdn)
     {
         return participantDAO.findParticipantByMsisdn(msisdn);
     }
@@ -40,6 +40,9 @@ public class LottoService {
         else
             participantDAO.saveParticipant(participant);
     }
+
+    public void lockParticipant(long msisdn) { participantDAO.lockParticipant(msisdn); }
+
     public Ticket createNewTicket(Ticket newTicket)
     {
         Ticket t = new Ticket();

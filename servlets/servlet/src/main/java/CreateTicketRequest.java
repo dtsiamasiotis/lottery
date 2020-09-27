@@ -3,9 +3,9 @@ import javax.validation.constraints.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateTicketRequest {
-    @NotNull(message = "numbers cannot be null")
+    @NotNull(message = "Numbers cannot be null")
     private String numbers;
-    @NotNull
+    @NotNull(message = "Msisdn cannot be null")
     private String msisdn;
 
     public String getNumbers() {
