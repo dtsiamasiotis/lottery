@@ -1,15 +1,17 @@
 package utils;
 
+import javax.ejb.Stateless;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@Stateless
 public class PropertiesReader {
     private Properties properties;
 
-    public PropertiesReader(String propertyFileName) throws IOException {
+    public PropertiesReader() throws IOException{
         InputStream is = getClass().getClassLoader()
-                .getResourceAsStream(propertyFileName);
+                .getResourceAsStream("application.properties");
         this.properties = new Properties();
         this.properties.load(is);
     }

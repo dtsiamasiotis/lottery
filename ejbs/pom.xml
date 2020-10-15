@@ -78,6 +78,11 @@
           <version>3.0.0</version>
           <scope>test</scope>
       </dependency>
+    <!--<dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>properties-maven-plugin</artifactId>
+      <version>1.0.0</version>
+    </dependency>-->
   </dependencies>
 
   <build>
@@ -104,22 +109,23 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>properties-maven-plugin</artifactId>
         <version>1.0.0</version>
+        <configuration>
+          <outputFile>${basedir}/src/main/resources/application.properties</outputFile>
+          <properties/>
+        </configuration>
         <executions>
           <execution>
             <phase>generate-resources</phase>
             <goals>
               <goal>write-project-properties</goal>
             </goals>
-            <configuration>
-              <outputFile>${project.build.outputDirectory}/application.properties</outputFile>
-            </configuration>
           </execution>
         </executions>
       </plugin>
     </plugins>
   </build>
   <properties>
-    <informUsers.url>http://localhost</informUsers.url>
+    <informWinners.url>http://localhost:3500/informWinners</informWinners.url>
   </properties>
 
 </project>

@@ -1,11 +1,13 @@
 package utils;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class WinnerRestModel {
+@Builder
+public class WinnerRequest {
     private long msisdn;
     private String winningNumbers;
     private long drawId;

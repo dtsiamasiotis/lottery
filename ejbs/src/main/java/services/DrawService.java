@@ -7,11 +7,12 @@ import entities.Draw;
 import entities.OutgoingRequestsLog;
 import entities.Ticket;
 import entities.Winner;
-import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
-import utils.WinnerRestModel;
+import utils.HttpAdapter;
+import utils.PropertiesReader;
+import utils.WinnerRequest;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -46,6 +47,12 @@ public class DrawService {
 
     @EJB
     private OutgoingRequestLogService outgoingRequestLogService;
+
+    @EJB
+    private PropertiesReader propertiesReader;
+
+    @EJB
+    private HttpAdapter httpAdapter;
 
     @PostConstruct
     public void init()
@@ -216,47 +223,25 @@ public class DrawService {
         return winningNumbersStr;
     }
 
-    public void informWinners()
+    public List<Winner> fetchWinners(long drawId)
     {
         Query q = entityManager.createNativeQuery("SELECT * FROM winners WHERE draw_id=?",Winner.class);
-        q.setParameter(1,getCurrentDrawId());
+        q.setParameter(1,drawId);
         List<Winner> winners = q.getResultList();
+        return winners;
+    }
+
+    public void informWinners()
+    {
+
+        List<Winner> winners = fetchWinners(getCurrentDrawId());
 
         for(Winner winner:winners)
         {
-            ResteasyClient client = new ResteasyClientBuilder().build();
-            ResteasyWebTarget target = client.target("https://abf0bbaa-0ab4-403c-b2eb-628c78def46d.mock.pstmn.io/informWinners/");
-            String amount = String.valueOf(winner.getPrize().getAmount());
-            String msisdn = String.valueOf(winner.getTicket().getParticipant().getMsisdn());
-            String requestBody = "{\"msisdn\":"+msisdn+",\"amount\":\""+amount+"\"}";
-            WinnerRestModel winnerRestModel = createWinnerRestModel(winner);
-            OutgoingRequestsLog outgoingRequestsLog = new OutgoingRequestsLog();
-            ObjectMapper objectMapper = new ObjectMapper();
-            outgoingRequestsLog.setOutgoingRequestTstamp(new Date());
-            Response response = target.request().post(Entity.entity(winnerRestModel, MediaType.APPLICATION_JSON));
-            String responseBody = response.readEntity(String.class);
-            response.close();
-
-            try {
-                String jsonRequest = objectMapper.writeValueAsString(winnerRestModel);
-                outgoingRequestsLog.setOutgoingRequest(jsonRequest);
-            }catch(Exception e){}
-
-            outgoingRequestsLog.setResponse(responseBody);
-            outgoingRequestsLog.setResponseTstamp(new Date());
-            outgoingRequestLogService.saveOutgoingRequestLog(outgoingRequestsLog);
+           httpAdapter.sendInformWinnersRequest(winner);
         }
     }
 
-    public WinnerRestModel createWinnerRestModel(Winner winner)
-    {
-        WinnerRestModel winnerRestModel = new WinnerRestModel();
-        winnerRestModel.setDrawId(winner.getDrawId());
-        winnerRestModel.setMsisdn(winner.getTicket().getParticipant().getMsisdn());
-        winnerRestModel.setPrizeAmount(winner.getPrize().getAmount());
-        winnerRestModel.setTicketId(winner.getTicket().getTicketId());
-        winnerRestModel.setWinningNumbers(winner.getWinningNumbers());
-        return winnerRestModel;
-    }
+
 }
 
