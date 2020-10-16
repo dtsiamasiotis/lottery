@@ -14,8 +14,11 @@ public class JMSService {
     @Inject
     private JMSContext jmsctx;
 
-    @Resource(name="java:/queue/CHARGES_QUEUE")
+    @Resource(name = "java:/queue/CHARGES_QUEUE")
     private Destination chargesQueue;
+
+    @Resource(name = "java:/queue/PROMO_QUEUE")
+    private Destination promoQueue;
 
     public void send(Serializable s, QueueType queueType)
     {
@@ -24,6 +27,9 @@ public class JMSService {
             switch(queueType){
                 case CHARGE:
                     p.send(chargesQueue,s);
+                    break;
+                case PROMO:
+                    p.send(promoQueue,s);
                     break;
             }
         } catch (Exception e) {

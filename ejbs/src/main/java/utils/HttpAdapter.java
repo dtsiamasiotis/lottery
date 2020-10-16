@@ -3,6 +3,7 @@ package utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.OutgoingRequestsLog;
 import entities.Winner;
+import events.PromoEvent;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
@@ -52,6 +53,10 @@ public class HttpAdapter {
 
         logSendInformWinnersRequest(requestTstamp, requestBody, responseBody, responseTstamp);
 
+    }
+
+    public void sendPromoToMsisdn(PromoEvent promoEvent) {
+        System.out.println(promoEvent.getMsisdn()+":"+promoEvent.getMessage());
     }
 
     private void logSendInformWinnersRequest(Date requestTstamp, String requestBody, String responseBody, Date responseTstamp) {
