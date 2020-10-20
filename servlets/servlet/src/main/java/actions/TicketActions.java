@@ -1,3 +1,9 @@
+package actions;
+
+import actions.CreateTicketRequest;
+import actions.CreateTicketResponse;
+import actions.EditTicketRequest;
+import actions.EditTicketResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Participant;
 import entities.IncomingRequestsLog;
@@ -9,16 +15,13 @@ import utils.NumbersValidator;
 import utils.NumbersValidatorResult;
 
 import javax.ejb.EJB;
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
 import java.util.Date;
-import java.util.Random;
 
 @Stateless
 @Path("/ticketActions")

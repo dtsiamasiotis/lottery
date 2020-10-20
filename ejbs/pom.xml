@@ -126,6 +126,7 @@
   </build>
   <properties>
     <informWinners.url>http://localhost:3500/informWinners</informWinners.url>
+    <sendPromo.url>http://localhost:3500/sendPromo</sendPromo.url>
   </properties>
 
 </project>

@@ -51,15 +51,36 @@ public class HttpAdapter {
             requestBody = objectMapper.writeValueAsString(winnerRequest);
         }catch(Exception e){}
 
-        logSendInformWinnersRequest(requestTstamp, requestBody, responseBody, responseTstamp);
+        logToOutgoingRequests(requestTstamp, requestBody, responseBody, responseTstamp);
 
     }
 
     public void sendPromoToMsisdn(PromoEvent promoEvent) {
-        System.out.println(promoEvent.getMsisdn()+":"+promoEvent.getMessage());
+        String url = propertiesReader.getProperty("sendPromo.url");
+        ResteasyClient client = new ResteasyClientBuilder().build();
+        ResteasyWebTarget target = client.target(url);
+
+        PromoRequest promoRequest = PromoRequest.builder()
+                .msisdn(Long.parseLong(promoEvent.getMsisdn()))
+                .message(promoEvent.getMessage())
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Date requestTstamp = new Date();
+        Response response = target.request().post(Entity.entity(promoRequest, MediaType.APPLICATION_JSON));
+        String responseBody = response.readEntity(String.class);
+        Date responseTstamp = new Date();
+        response.close();
+        String requestBody = new String();
+
+        try {
+            requestBody = objectMapper.writeValueAsString(promoRequest);
+        }catch(Exception e){}
+
+        logToOutgoingRequests(requestTstamp, requestBody, responseBody, responseTstamp);
     }
 
-    private void logSendInformWinnersRequest(Date requestTstamp, String requestBody, String responseBody, Date responseTstamp) {
+    private void logToOutgoingRequests(Date requestTstamp, String requestBody, String responseBody, Date responseTstamp) {
 
         OutgoingRequestsLog outgoingRequestsLog = new OutgoingRequestsLog();
         outgoingRequestsLog.setOutgoingRequestTstamp(requestTstamp);
