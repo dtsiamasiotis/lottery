@@ -1,3 +1,5 @@
+package actions;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.validation.constraints.NotNull;
 

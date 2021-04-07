@@ -1,5 +1,6 @@
 package utils;
 
 public enum QueueType {
-    CHARGE;
+    CHARGE,
+    PROMO;
 }

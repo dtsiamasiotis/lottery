@@ -1,4 +1,6 @@
-import dao.ParticipantDAO;
+package actions;
+
+import actions.CreateTicketRequest;
 import dao.TicketDAO;
 import entities.Ticket;
 import services.DrawService;

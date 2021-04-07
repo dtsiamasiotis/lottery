@@ -12,7 +12,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 
 @MessageDriven(
-        name = "FailedPackagePurchaseMDB",
+        name = "chargeMDB",
         activationConfig = {
                 @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
                 @ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/CHARGES_QUEUE"),

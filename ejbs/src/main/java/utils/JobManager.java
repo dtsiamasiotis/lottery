@@ -2,6 +2,7 @@ package utils;
 
 import entities.Cron;
 import services.DrawService;
+import services.PromoService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -23,6 +24,9 @@ public class JobManager {
 
     @EJB
     private DrawService drawService;
+
+    @EJB
+    private PromoService promoService;
 
     @PostConstruct
     public void init()
@@ -65,6 +69,8 @@ public class JobManager {
             drawService.findWinners();
         else if(timerType.getType().equals("informWinners"))
             drawService.informWinners();
+        else if(timerType.getType().contains("sendPromo"))
+            promoService.sendPromo(timerType.getType());
 
         System.out.println(timerType.getType());
     }
